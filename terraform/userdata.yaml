@@ -1,0 +1,22 @@
+#cloud-config
+users:
+  - name: ${username}
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh-authorized-keys:
+      - ${ssh_public_key}
+ write_files:
+ - content: |
+     # My new /etc/sysconfig/samba file
+     routes:
+       - input:
+           plugin: metrics_pull
+           config:
+             url: http://localhost:9090/metrics
+             format:
+               prometheus: {}
+         channel:
+           channel_ref:
+             name: cloud_monitoring
+   path: /ua/prometheus.yml
